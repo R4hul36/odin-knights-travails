@@ -10,9 +10,6 @@ function knightMoves(start, target) {
   
   const predecessors = {}
 
-  const lastCoordinates = []
-
-
   // create a while loop that runs till the quque is empty or if target is reached
   while( queue.length > 0) {
     let front = queue.shift()
@@ -63,28 +60,19 @@ function knightMoves(start, target) {
     }
    
   }
- 
-  // console.log(lastCoordinates, "last");
-
-  // let path = [target]
+  // console.log(predecessors["7,7"])
+  // console.log(predecessors[target.toString()]);
+  let shortestPath = []
+  shortestPath.push(target)
+  let node = String(target)
   
-  // let currCoordinate = target
-  // let count = 0
-  // while(currCoordinate[0]!== start[0] && currCoordinate[1] !== start[1]) {
-   
-  //   if(predecessors[count][1][0] === currCoordinate[0] && predecessors[count][1][1] === currCoordinate[1]){
-  //     path.push(predecessors[count][0])
-  //     currCoordinate = predecessors[count][0]
-  //     count = 0
-  //     continue
-  //   }
-  //   count++
-  // }
-
-  // console.log(path.reverse(), "sdfsf");
+  while(node !== String(start)){
+    shortestPath.push(predecessors[node])
+    node = String(predecessors[node]) 
+  }
+  console.log(shortestPath, "short");
   
-  
-  return predecessors
+  return shortestPath.reverse()
 }
 
 
@@ -107,7 +95,7 @@ function checkDuplicates (playedMoves, validMoves) {
 }
 
 
-console.log(knightMoves([0,0],[7,7]))
+console.log(knightMoves([0,0],[3,3]))
 
 // console.log(checkDuplicates([[0,0],[2,1],[4,2],[6,3],[4,4],[6,5],[7,7]], [[1,1], [6,3], [6,6]]));
 
