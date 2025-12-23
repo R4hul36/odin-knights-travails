@@ -1,8 +1,6 @@
 function knightMoves(start, target) {
-  const queue = []
-  queue.push(start)
-  const playedMoves = []
-  playedMoves.push(start)
+  const queue = [start]
+  const visitedSquares = [start]
   const predecessors = {}
 
   // create a while loop that runs till the queue is empty or if target is reached
@@ -11,50 +9,54 @@ function knightMoves(start, target) {
     const validMoves = findValidMoves(front)
     let targetFound = false
 
-    for (let i = 0; i < validMoves.length; i++) {
+  
+    for (move of validMoves) {
       let duplicateFound = false
-      for (let j = 0; j < playedMoves.length; j++) {
+      for (square of visitedSquares) {
+        // check if the current move is already present in the visited list, if so mark it as a duplicate
         if (
-          playedMoves[j][0] === validMoves[i][0] &&
-          playedMoves[j][1] === validMoves[i][1]
+          square[0] === move[0] &&
+          square[1] === move[1]
         ) {
           duplicateFound = true
           break
         }
       }
 
+      // if no duplicates are found push the current move to the visited array and break the loop if the target square is reached
       if (!duplicateFound) {
-        let combo =
-          JSON.stringify(validMoves[i][0]) +
+        let moveToString =
+          JSON.stringify(move[0]) +
           ',' +
-          JSON.stringify(validMoves[i][1])
+          JSON.stringify(move[1])
 
-        if (validMoves[i][0] === target[0] && validMoves[i][1] === target[1]) {
+        if (move[0] === target[0] && move[1] === target[1]) {
           targetFound = true
-          predecessors[combo] = front
-          playedMoves.push(validMoves[i])
-          queue.push(validMoves[i])
+          predecessors[moveToString] = front
+          visitedSquares.push(move)
+          queue.push(move)
           break
         }
-        playedMoves.push(validMoves[i])
-        queue.push(validMoves[i])
-        predecessors[combo] = front
+        visitedSquares.push(move)
+        queue.push(move)
+        predecessors[moveToString] = front
       }
     }
     if (targetFound) {
       break
     }
   }
-  let shortestPath = []
-  shortestPath.push(target)
+  let shortestPath = [target]
   let node = String(target)
 
   while (node !== String(start)) {
     shortestPath.push(predecessors[node])
     node = String(predecessors[node])
   }
-
-  return shortestPath.reverse()
+  console.log(`You made it in ${shortestPath.length} moves!  Here's your path: `);
+  for(let i = shortestPath.length-1; i>=0; i--){
+    console.log(shortestPath[i]) 
+  }
 }
 
 function findValidMoves(arr) {
@@ -64,7 +66,7 @@ function findValidMoves(arr) {
     [x - 2, y + 1],
     [x - 2, y - 1],
     [x + 1, y + 2],
-    [x + 1, y + 2],
+    [x + 1, y - 2],
     [x + 2, y + 1],
     [x + 2, y - 1],
     [x - 1, y - 2],
@@ -76,4 +78,4 @@ function findValidMoves(arr) {
   )
 }
 
-console.log(knightMoves([0, 0], [3, 3]))
+knightMoves([0, 0], [7,7])
